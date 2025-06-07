@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Te amo, Mi Amor! ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+</head>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Dancing Script', cursive;
+    background: linear-gradient(to bottom, #ffccd5, #ffe6ea);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  #particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  .container {
+    text-align: center;
+    max-width: 100%;
+    width: 90%;
+    padding: 20px;
+    margin: 0 auto;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    color: #e91e63;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1.5rem;
+    animation: fadeIn 2s ease-in;
+  }
+
+  .memory-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .memory-item {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .memory-item:hover {
+    transform: scale(1.05);
+  }
+
+  .memory-item img {
+    width: 100%;
+    height: clamp(120px, 25vw, 180px);
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+  }
+
+  .memory-text {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: #e91e63;
+    margin-top: 0.5rem;
+    animation: fadeIn 1s ease-in;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 90%;
+    width: min(500px, 95%);
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: #e91e63;
+    cursor: pointer;
+  }
+
+  .time-together {
+    margin: 1.5rem 0;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: #e91e63;
+  }
+
+  .message-container {
+    margin-top: 1.5rem;
+  }
+
+  #showMessage {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    font-family: 'Dancing Script', cursive;
+  }
+
+  .message {
+    display: none;
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+    color: #e91e63;
+    animation: fadeIn 2s ease-in;
+  }
+
+  button[onclick="sharePage()"] {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+  }
+
+  .audio-controls {
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .audio-controls button {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Enhanced Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .memory-gallery {
+      grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+      gap: 0.75rem;
+    }
+
+    .memory-item img {
+      height: clamp(100px, 20vw, 150px);
+    }
+
+    header h1 {
+      font-size: clamp(1.5rem, 4.5vw, 2rem);
+    }
+
+    .modal-content {
+      padding: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 10px;
+    }
+
+    .memory-gallery {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .memory-item img {
+      height: clamp(80px, 30vw, 120px);
+    }
+
+    header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+    }
+
+    .message {
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+    }
+
+    .close {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+    }
+
+    #showMessage, button[onclick="sharePage()"], .audio-controls button {
+      padding: 0.5rem 1rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 1000px;
+    }
+
+    .memory-gallery {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .memory-item img {
+      height: 200px;
+    }
+  }
+  .memory-item {
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: calc(var(--index) * 0.2s);
+}
+.memory-gallery {
+  counter-reset: item;
+}
+.memory-item {
+  counter-increment: item;
+  --index: counter(item);
+}
+.memory-item {
+  perspective: 1000px;
+}
+.memory-item img {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.memory-item:hover img {
+  transform: rotateY(180deg);
+}
+</style>
+<body>
+  <div id="particles-js"></div>
+  <div class="container">
+    <header>
+      <h1>¡Feliz Cumpleaños, Mi Amor! ❤️</h1>
+    </header>
+    <div class="memory-gallery">
+      <div class="memory-item" onclick="showMemory('Bailando bajo las estrellas, el mundo era solo nuestro. ✨')">
+        <img src="foto1.jpg" alt="Día en la playa" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Cuando no me llevaste, pero te veias hermosa. 🥰')">
+        <img src="foto2.jpg" alt="Primera cita" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Siempre felicises, sin importar nada. ✨')">
+        <img src="foto3.jpg" alt="Baile bajo las estrellas" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Tu sonrisa ilumina mis días, cada momento contigo es un regalo. 💖')">
+        <img src="foto4.jpg" alt="Viaje juntos" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Riendo juntos, creando recuerdos que durarán para siempre. 😂')">
+        <img src="foto5.jpg" alt="Riendo juntos" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Un rincón especial donde todo es posible, contigo a mi lado. 🌅')">
+        <img src="foto6.jpg" alt="Rincón favorito" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('siempre juntos, celebrando nuestro amor. 🎉')">
+        <img src="foto7.jpg" alt="Primer aniversario" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Abrazados bajo las luces navideñas, pura magia. 🎄')">
+        <img src="foto8.jpg" alt="Paseo bajo la lluvia" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('playa, risas y amor, todo en un solo lugar. 🏖️')">
+        <img src="foto9.jpg" alt="Cocinando juntos" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Ese viaje juntos, cada kilómetro un recuerdo inolvidable. 🚗')">
+        <img src="foto10.jpg" alt="Noche de películas" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Explorando nuevos lugares, siempre juntos. 🗺️')">
+        <img src="foto11.jpg" alt="Explorando juntos" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Aquel día en la playa fue mágico, con la brisa y tu sonrisa iluminando todo. 🌊')">
+        <img src="foto12.jpg" alt="Atardecer especial" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Tú y yo, siempre soñando juntos, creando un futuro lleno de amor. 💕')">
+        <img src="foto13.jpg" alt="Cantando en el coche" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Riendo hasta las lágrimas, contigo todo es perfecto. 😂')">
+        <img src="foto14.jpg" alt="Luces navideñas" loading="lazy">
+      </div>
+      <div class="memory-item" onclick="showMemory('Dinosaurio roar. 🦖')">
+        <img src="foto15.jpg" alt="Luces navideñas" loading="lazy">
+      </div>
+    </div>
+    <div id="memoryModal" class="modal">
+      <div class="modal-content">
+        <span onclick="closeModal()" class="close">×</span>
+        <p id="modalMemoryText" class="memory-text"></p>
+      </div>
+    </div>
+    <p id="memory-text" class="memory-text" style="display: none;"></p>
+    <div class="time-together">
+      <p id="days-together"></p>
+    </div>
+    <div class="message-container">
+      <button id="showMessage">Ver tu mensaje especial</button>
+      <p id="message" class="message"></p>
+    </div>
+    <div class="audio-controls" id="audioControls">
+      <button id="playMusic">Reproducir Música</button>
+      <button id="pauseMusic">Pausar Música</button>
+    </div>
+    
+    <audio id="backgroundMusic" loop autoplay muted>
+      <source src="music.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+  </div>
+  <script>
+    const messageText = "¡Feliz cumpleaños, mi amor! Eres la luz de mi vida y cada día contigo es un regalo. Te amo con todo mi corazón. ❤️";
+    const messageElement = document.getElementById('message');
+    const showMessageButton = document.getElementById('showMessage');
+
+    // Particles.js configuration for heart animations
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 30 },
+        color: { value: '#ffccd5' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5, random: true },
+        size: { value: 5, random: true },
+        move: { speed: 2, direction: 'none', random: true }
+      },
+      interactivity: {
+        events: { onhover: { enable: true, mode: 'repulse' } }
+      }
+    });
+
+    // Memory gallery interaction with modal
+    function showMemory(text) {
+      const modal = document.getElementById('memoryModal');
+      const modalMemoryText = document.getElementById('modalMemoryText');
+      modalMemoryText.textContent = text;
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('memoryModal');
+      modal.style.display = 'none';
+    }
+
+    // Calculate time together since June 26, 2023
+    function daysTogether(startDate) {
+      const start = new Date(startDate);
+      const now = new Date();
+      const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      return `Hemos estado juntos ${diff} días 💕`;
+    }
+    document.getElementById('days-together').textContent = daysTogether('2023-06-26');
+
+    // Message animation
+    function typeWriter(text, element, speed = 50) {
+      let i = 0;
+      element.textContent = '';
+      element.style.display = 'block';
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    showMessageButton.addEventListener('click', () => {
+      showMessageButton.style.display = 'none';
+      typeWriter(messageText, messageElement);
+    });
+
+
+    // Audio controls
+    const audio = document.getElementById('backgroundMusic');
+    const playButton = document.getElementById('playMusic');
+    const pauseButton = document.getElementById('pauseMusic');
+    const audioControls = document.getElementById('audioControls');
+
+    function tryPlayAudio() {
+      audio.muted = false;
+      audio.play().then(() => {
+        audioControls.style.display = 'none';
+      }).catch(error => {
+        console.log('Error playing audio on load:', error);
+        audioControls.style.display = 'block';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      tryPlayAudio();
+    });
+
+    document.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.muted = false;
+        audio.play().catch(error => console.log('Error playing audio on click:', error));
+      }
+    }, { once: true });
+
+    playButton.addEventListener('click', () => {
+      audio.muted = false;
+      audio.play().catch(error => console.log('Error playing audio:', error));
+    });
+
+    pauseButton.addEventListener('click', () => {
+      audio.pause();
+    });
+    particlesJS('particles-js', {
+  particles: {
+    number: { value: 50 },
+    color: { value: ['#ffccd5', '#e91e63', '#ff5e62'] },
+    shape: { type: 'image', image: { src: 'heart.png', width: 32, height: 32 } },
+    opacity: { value: 0.7, random: true },
+    size: { value: 10, random: true },
+    move: { speed: 3, direction: 'top', out_mode: 'out' }
+  },
+  interactivity: {
+    events: { onhover: { enable: true, mode: 'bubble' }, onclick: { enable: true, mode: 'push' } }
+  }
+});
+
+
+  </script>
+</body>
+</html>
